@@ -68,7 +68,7 @@ class shodorFrontEnd extends shodorMatrix
         double min=d[0][0];
         for(int i=0;i<d.length;i++)
         {
-            for(int j=0;j<d[0].length;i++)
+            for(int j=0;j<d[0].length;j++)
             {
                 if(d[i][j]<min)
                 min=d[i][j];
