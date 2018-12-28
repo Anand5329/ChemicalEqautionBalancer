@@ -44,9 +44,43 @@ class shodorFrontEnd extends shodorMatrix
         if(infinitesimalToZero(Math.abs(a.det()))==0)
             Ans=answerMatrix(a,b,Ans,og);
         Ans=roundOff(Ans);
+        Ans=wholeNo(Ans);
         int cFact=HCF(commonFactor(Ans));
         Ans=divider(Ans,cFact);
         dispMatrix(Ans);
+    }
+    
+    double[][] multiply(double d[][], double a)
+    {
+        for(int i=0;i<d.length;i++)
+        {
+            for(int j=0;j<d[0].length;i++)
+            {
+                d[i][j]*=a;
+            }
+        }
+        return d;
+    }
+    
+    Matrix wholeNo(Matrix a)
+    {
+        double d[][]=a.getArray();
+        double min=d[0][0];
+        for(int i=0;i<d.length;i++)
+        {
+            for(int j=0;j<d[0].length;i++)
+            {
+                if(d[i][j]<min)
+                min=d[i][j];
+            }
+        }
+        while(min<1)
+        {
+            min*=10;
+            d=multiply(d,10);
+        }
+        Matrix D=new Matrix(d);
+        return D;
     }
     
     public int[][] commonFactor(Matrix ans)
