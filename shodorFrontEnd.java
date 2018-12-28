@@ -115,7 +115,7 @@ class shodorFrontEnd extends shodorMatrix
     
     int HCF(int[][] arr)
     {
-        int max=0;
+        int max=1;
         boolean flag=true;
         for(int i=0;i<arr.length;i++)
         {
