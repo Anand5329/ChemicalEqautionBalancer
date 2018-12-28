@@ -2,11 +2,24 @@ import java.util.*;
 import Jama.*;
 class shodorFrontEnd extends shodorMatrix
 {
+
     public static void main()
     {
+        Scanner sc=new Scanner(System.in);
         shodorFrontEnd obj=new shodorFrontEnd();
-        obj.control();
+        boolean flag=false;
+        do
+        {
+            obj.control();
+            flag=false;
+            System.out.println("Again?:");
+            String s=sc.next();
+            if(s=="y")
+                flag=true;  
+        }
+        while(flag);
     }
+    
     public void control()
     {
         int mat[][]=matrixMaker();
@@ -22,18 +35,71 @@ class shodorFrontEnd extends shodorMatrix
         Matrix a=new Matrix(mat_A);
         Matrix b=new Matrix(mat_B);
         Matrix Ans=step1(a, b);
+        Ans=absoluter(Ans);
         Ans=matrixToZero(Ans);
-        if(infinitesimalToZero(a.det())!=0)
+        if(infinitesimalToZero(Math.abs(a.det()))!=0)
             Ans=addToMatrix(Ans,a.det());
         Ans=absoluter(Ans);
         Ans=zeroRemover(Ans);
-        if(infinitesimalToZero(a.det())==0)
+        if(infinitesimalToZero(Math.abs(a.det()))==0)
             Ans=answerMatrix(a,b,Ans,og);
         Ans=roundOff(Ans);
-        Ans=factoriser(Ans);
+        int cFact=HCF(commonFactor(Ans));
+        Ans=divider(Ans,cFact);
         dispMatrix(Ans);
     }
     
+    public int[][] commonFactor(Matrix ans)
+    {
+        double[][] a=ans.getArray();
+        int max=0;
+        for(int i=0;i<a.length;i++)
+        {
+            if(max<a[i][0])
+            max=(int)a[i][0];
+        }
+        int fact[][]=new int[max][a.length];
+        for(int i=0;i<fact.length;i++)
+        {
+            for(int j=0;j<fact[0].length;j++)
+            {
+                fact[i][j]=0;
+            }
+        }
+        for(int i=0;i<a.length;i++)
+        {
+            for(int j=2;j<=a[i][0];j++)
+            {
+                if(a[i][0]%j==0)
+                {
+                    fact[j-2][i]=1;
+                }
+            }
+        }
+        return fact;
+    }
+    
+    int HCF(int[][] arr)
+    {
+        int max=0;
+        boolean flag=true;
+        for(int i=0;i<arr.length;i++)
+        {
+            flag=true;
+            for(int j=0;j<arr[0].length;j++)
+            {
+                if(arr[i][j]!=1)
+                {
+                    flag=false;
+                    break;
+                }
+            }
+            if(flag)
+                max=i+2;
+        }
+        return max;
+    }
+
     double roundOff(double a)
     {
         int ctr=0;
@@ -44,66 +110,51 @@ class shodorFrontEnd extends shodorMatrix
         }
         double b=a%1;
         if((b)<=0.01||(b)>=0.99)
-        a=Math.rint(a);
+            a=Math.rint(a);
         a=a/(Math.pow(10,ctr));
         return a;
     }
-    
+
     Matrix roundOff(Matrix mat)
     {
         double[][] arr=mat.getArray();
         for(int i=0;i<arr.length;i++)
         {
             for(int j=0;j<arr[0].length;j++)
-            arr[i][j]=roundOff(arr[i][j]);
+                arr[i][j]=roundOff(arr[i][j]);
         }
         Matrix matFinal=new Matrix(arr);
         return matFinal;
     }
-    
-    Matrix factoriser(Matrix a)
+
+    Matrix divider(Matrix a,int b)
     {
         double A[][]=a.getArray();
-        double min=A[0][0];
         for(int i=0;i<A.length;i++)
         {
-            if(A[i][0]<min)
-                min=A[i][0];
-        }
-        boolean flag=true;
-        for(int i=0;i<A.length;i++)
-        {
-            if(A[i][0]%min!=0)
+            for(int j=0;j<A[0].length;j++)
             {
-                flag=false;
-                break;
+                A[i][j]=A[i][j]/b;
             }
         }
-        if(flag)
-        {
-            for(int i=0;i<A.length;i++)
-            {
-                A[i][0]=A[i][0]/min;
-            }
-        }
-        Matrix m=new Matrix(A);
-        return m;
+        Matrix B=new Matrix(A);
+        return B;
     }
-    
+
     public boolean isZero(double a)
     {
         if(a<1.0E-13)
-        return true;
+            return true;
         else
-        return false;
+            return false;
     }
-    
+
     double infinitesimalToZero(double n)
     {
         if(isZero(n))
-        return 0.0;
+            return 0.0;
         else
-        return n;
+            return n;
     }
 
     public void dispMatrix(Matrix A)
@@ -122,10 +173,10 @@ class shodorFrontEnd extends shodorMatrix
     Matrix step1(Matrix a,Matrix b)
     {
         double det=-1;
-        if(a.det()<1.0E-14)
-        det=0;
+        if(Math.abs(a.det())<1.0E-14)
+            det=0;
         else
-        det=a.det();
+            det=a.det();
         if(det!=0) 
             return ((a.inverse()).times(b)).times(a.det());
         else
@@ -186,14 +237,14 @@ class shodorFrontEnd extends shodorMatrix
         Matrix mFinal=new Matrix(arrFinal);
         return mFinal;
     }
-    
+
     Matrix matrixToZero(Matrix mat)
     {
         double[][] arr=mat.getArray();
         for(int i=0;i<arr.length;i++)
         {
             for(int j=0;j<arr[0].length;j++)
-            arr[i][j]=infinitesimalToZero(arr[i][j]);
+                arr[i][j]=infinitesimalToZero(arr[i][j]);
         }
         Matrix matFinal=new Matrix(arr);
         return matFinal;
