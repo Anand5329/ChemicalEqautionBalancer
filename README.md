@@ -1,1 +1,1 @@
-# ChemicalEqautionBalancer
+# ChemicalEquationBalancer
