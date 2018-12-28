@@ -25,7 +25,7 @@ class shodorFrontEnd extends shodorMatrix
         int mat[][]=matrixMaker();
         int A[][]=getMatrix(mat);
         int B[][]=getMatrixAns(mat);
-        int og[][]=A;
+        int diff=A.length-A[0].length;
         if(A.length!=A[0].length)
         {
             A=matrixFiller(A);
@@ -34,7 +34,7 @@ class shodorFrontEnd extends shodorMatrix
         double mat_B[][]=intToDouble(B);
         Matrix a=new Matrix(mat_A);
         Matrix b=new Matrix(mat_B);
-        Matrix Ans=step1(a, b);
+        Matrix Ans=step1(a, b, diff);
         Ans=absoluter(Ans);
         Ans=matrixToZero(Ans);
         if(infinitesimalToZero(Math.abs(a.det()))!=0)
@@ -42,7 +42,7 @@ class shodorFrontEnd extends shodorMatrix
         Ans=absoluter(Ans);
         Ans=zeroRemover(Ans);
         if(infinitesimalToZero(Math.abs(a.det()))==0)
-            Ans=answerMatrix(a,b,Ans,og);
+            Ans=answerMatrix(a,b,Ans,diff);
         Ans=roundOff(Ans);
         Ans=wholeNo(Ans);
         int cFact=HCF(commonFactor(Ans));
@@ -204,7 +204,7 @@ class shodorFrontEnd extends shodorMatrix
         }
     }
 
-    Matrix step1(Matrix a,Matrix b)
+    Matrix step1(Matrix a,Matrix b,int diff)
     {
         double det=-1;
         if(Math.abs(a.det())<1.0E-14)
@@ -215,7 +215,7 @@ class shodorFrontEnd extends shodorMatrix
             return ((a.inverse()).times(b)).times(a.det());
         else
         {
-            a=colRemover(a);
+            a=colRemover(a,diff);
             return a.inverse().times(b);
         }///FTTY
     }
@@ -284,10 +284,10 @@ class shodorFrontEnd extends shodorMatrix
         return matFinal;
     }
 
-    Matrix colRemover(Matrix mat)
+    Matrix colRemover(Matrix mat, int diff)
     {
         double[][] arr=mat.getArray();
-        double[][] arrFinal=new double[arr.length][arr[0].length-1];
+        double[][] arrFinal=new double[arr.length][arr[0].length-diff];
         for(int i=0;i<arr.length;i++)
         {
             for(int j=0;j<arrFinal[0].length;j++)
@@ -297,12 +297,11 @@ class shodorFrontEnd extends shodorMatrix
         return matFinal;
     }
 
-    double lastValue(Matrix a, Matrix b, Matrix ans, int[][] og)
+    double lastValue(Matrix a, Matrix b, Matrix ans, int diff)
     {
         double[][] B=b.getArray();
         double[][] A=a.getArray();
         double[][] Ans=ans.getArray();
-        int diff=og.length-og[0].length;
         int index=-1;
         for(int i=0;i<B.length;i++)//to get a non-zero coefficient of the last compound variable
         {
@@ -336,10 +335,9 @@ class shodorFrontEnd extends shodorMatrix
         return matFinal;
     }
 
-    Matrix answerMatrix(Matrix a, Matrix b, Matrix ans, int[][] og)
+    Matrix answerMatrix(Matrix a, Matrix b, Matrix ans, int diff)
     {
-        double last=lastValue(a,b,ans,og);
-        int diff=og.length-og[0].length;
+        double last=lastValue(a,b,ans,diff);
         ans=addToMatrix(ans,last);
         return ans;
     }
