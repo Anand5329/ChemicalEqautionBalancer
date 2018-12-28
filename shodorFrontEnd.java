@@ -14,7 +14,7 @@ class shodorFrontEnd extends shodorMatrix
             flag=false;
             System.out.println("Again?:");
             String s=sc.next();
-            if(s=="y")
+            if(s.equalsIgnoreCase("y"))
                 flag=true;  
         }
         while(flag);
