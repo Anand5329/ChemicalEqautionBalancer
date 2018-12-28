@@ -54,7 +54,7 @@ class shodorFrontEnd extends shodorMatrix
     {
         for(int i=0;i<d.length;i++)
         {
-            for(int j=0;j<d[0].length;i++)
+            for(int j=0;j<d[0].length;j++)
             {
                 d[i][j]*=a;
             }
