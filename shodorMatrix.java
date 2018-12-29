@@ -1,20 +1,13 @@
 import java.util.*;
 class shodorMatrix extends chemicalSeparator
 {
-    public int[][][] matrixMaker()
+    public int[][] matrixMaker(String comp[],int noR)
     {
-        String n=accept();
-        String compounds[]=compoundSeparator(n);
-        int noR=Integer.valueOf(compounds[compounds.length-1]);
-        String[] comp=new String[compounds.length-1];
-        for(int i=0;i<compounds.length-1;i++)
-            comp[i]=compounds[i];
-
         Map matMap=elementSeparator(comp);
         int m=matMap.size();
         int o=comp.length;
 
-        int mat[][][]=new int[m][o][2];
+        int mat[][]=new int[m][o];
 
         Set set=matMap.entrySet();
         Iterator itr=set.iterator();
@@ -27,15 +20,14 @@ class shodorMatrix extends chemicalSeparator
             int arr[]=(int[])entry.getValue();
             for(int i=0;i<noR;i++)
             {
-                mat[j][i][0]=arr[i];
+                mat[j][i]=arr[i];
             }
             for(int i=noR;i<arr.length;i++)
             {
-                mat[j][i][0]=-arr[i];
+                mat[j][i]=-arr[i];
             }
             j++;
         }
-        mat[0][0][1]=noR;
         return mat;
     }
 
@@ -120,7 +112,7 @@ class shodorMatrix extends chemicalSeparator
         return darr;
     }
 
-    boolean isNotNull(int n[])
+    boolean isNull(int n[])
     {
         boolean flag=true;
         for(int i=0;i<n.length;i++)
@@ -148,7 +140,7 @@ class shodorMatrix extends chemicalSeparator
                 else
                     prod[j-n]=arr[i][j];
             }
-            if(isNotNull(reac)&&isNotNull(prod))
+            if(!isNull(reac)&&!isNull(prod))
                 flag=true;
             else
             {

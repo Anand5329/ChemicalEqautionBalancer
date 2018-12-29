@@ -22,9 +22,14 @@ class shodorFrontEnd extends shodorMatrix
 
     public void control()
     {
-        int mat3[][][]=matrixMaker();
-        int noR=mat3[0][0][1];
-        int mat[][]=twoDToThreeD(mat3);
+        String n=accept();
+        String compounds[]=compoundSeparator(n);
+        int noR=Integer.valueOf(compounds[compounds.length-1]);
+        String[] comp=new String[compounds.length-1];
+        for(int i=0;i<compounds.length-1;i++)
+            comp[i]=compounds[i];
+
+        int mat[][]=matrixMaker(comp,noR);
         if(isReactionValid(mat,noR))
         {
             int A[][]=getMatrix(mat);
@@ -56,10 +61,10 @@ class shodorFrontEnd extends shodorMatrix
                 Ans=divider(Ans,minValue(Ans));
                 Ans=roundOff(Ans);
             }
-            dispMatrix(Ans);
+            displayFinal(Ans,comp,noR);
         }
         else
-        System.out.println("Invalid Reaction.");
+            System.out.println("Invalid Reaction.");
     }
 
     double[][] multiply(double d[][], double a)
@@ -206,6 +211,24 @@ class shodorFrontEnd extends shodorMatrix
             }
             System.out.println();
         }
+    }
+
+    void displayFinal(Matrix a, String arr[], int n)
+    {
+        double[][] mat=a.getArray();
+        for(int i=0;i<arr.length;i++)
+        {
+            String coeff=Integer.toString((int)mat[i][0]);
+            if(i==n-1)
+            {
+                System.out.print(coeff+arr[i]+" = ");
+            }
+            else if(i==arr.length-1)
+                System.out.print(coeff+arr[i]);
+            else
+                System.out.print(coeff+arr[i]+" + ");
+        }
+        System.out.println();
     }
 
     Matrix step1(Matrix a,Matrix b,int diff)
@@ -380,7 +403,7 @@ class shodorFrontEnd extends shodorMatrix
         }
         return min;
     }
-    
+
     int[][] twoDToThreeD(int[][][] m)
     {
         int a[][]=new int[m.length][m[0].length];

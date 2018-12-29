@@ -79,13 +79,13 @@ class chemicalSeparator extends chemicalAccept
         return map;
     }
 
-    public boolean isMapValueNull(Map map, String key)
-    {
-        if(map.get(key)==null)
-            return false;
-        else
-            return true;
-    }
+    //     public boolean isMapValueNull(Map map, String key)
+    //     {
+    //         if(map.get(key)==null)
+    //         return false;
+    //         else
+    //         return true; 
+    //     }
 
     public Map elementSeparator(String arr[])
     {
@@ -195,9 +195,9 @@ class chemicalSeparator extends chemicalAccept
         //         System.out.println("MAP: "+elements);
         return elements;
     }
-    
-        public Map parenthesesSimplifier(String n)
-        {
+
+    public Map parenthesesSimplifier(String n)
+    {
         String str[]=new String[1];
         str[0]=n;
         Map p=elementSeparator(str);
