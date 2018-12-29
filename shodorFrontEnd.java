@@ -16,6 +16,8 @@ class shodorFrontEnd extends shodorMatrix
             String s=sc.next();
             if(s.equalsIgnoreCase("y"))
                 flag=true;  
+            else
+                System.exit(1000);
         }
         while(flag);
     }
@@ -216,8 +218,11 @@ class shodorFrontEnd extends shodorMatrix
     void displayFinal(Matrix a, String arr[], int n)
     {
         double[][] mat=a.getArray();
+        int sum=0;
+        System.out.print("Balanced Reaction: ");
         for(int i=0;i<arr.length;i++)
         {
+            sum+=(int)mat[i][0];
             String coeff=Integer.toString((int)mat[i][0]);
             if(i==n-1)
             {
@@ -229,6 +234,8 @@ class shodorFrontEnd extends shodorMatrix
                 System.out.print(coeff+arr[i]+" + ");
         }
         System.out.println();
+        if(sum==arr.length)
+        System.out.println("The reaction is self balanced.");
     }
 
     Matrix step1(Matrix a,Matrix b,int diff)
