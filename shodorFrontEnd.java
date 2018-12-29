@@ -19,37 +19,49 @@ class shodorFrontEnd extends shodorMatrix
         }
         while(flag);
     }
-    
+
     public void control()
     {
-        int mat[][]=matrixMaker();
-        int A[][]=getMatrix(mat);
-        int B[][]=getMatrixAns(mat);
-        int diff=A.length-A[0].length;
-        if(A.length!=A[0].length)
+        int mat3[][][]=matrixMaker();
+        int noR=mat3[0][0][1];
+        int mat[][]=twoDToThreeD(mat3);
+        if(isReactionValid(mat,noR))
         {
-            A=matrixFiller(A);
+            int A[][]=getMatrix(mat);
+            int B[][]=getMatrixAns(mat);
+            int diff=A.length-A[0].length;
+            if(A.length!=A[0].length)
+            {
+                A=matrixFiller(A);
+            }
+            double mat_A[][]=intToDouble(A);
+            double mat_B[][]=intToDouble(B);
+            Matrix a=new Matrix(mat_A);
+            Matrix b=new Matrix(mat_B);
+            Matrix Ans=step1(a, b, diff);
+            Ans=absoluter(Ans);
+            Ans=matrixToZero(Ans);
+            if(infinitesimalToZero(Math.abs(a.det()))!=0)
+                Ans=addToMatrix(Ans,a.det());
+            Ans=absoluter(Ans);
+            Ans=zeroRemover(Ans);
+            if(infinitesimalToZero(Math.abs(a.det()))==0)
+                Ans=answerMatrix(a,b,Ans,diff);
+            Ans=roundOff(Ans);
+            Ans=wholeNo(Ans);
+            int cFact=HCF(commonFactor(Ans));
+            Ans=divider(Ans,(double)cFact);
+            if(isNotInteger(Ans))
+            {
+                Ans=divider(Ans,minValue(Ans));
+                Ans=roundOff(Ans);
+            }
+            dispMatrix(Ans);
         }
-        double mat_A[][]=intToDouble(A);
-        double mat_B[][]=intToDouble(B);
-        Matrix a=new Matrix(mat_A);
-        Matrix b=new Matrix(mat_B);
-        Matrix Ans=step1(a, b, diff);
-        Ans=absoluter(Ans);
-        Ans=matrixToZero(Ans);
-        if(infinitesimalToZero(Math.abs(a.det()))!=0)
-            Ans=addToMatrix(Ans,a.det());
-        Ans=absoluter(Ans);
-        Ans=zeroRemover(Ans);
-        if(infinitesimalToZero(Math.abs(a.det()))==0)
-            Ans=answerMatrix(a,b,Ans,diff);
-        Ans=roundOff(Ans);
-        Ans=wholeNo(Ans);
-        int cFact=HCF(commonFactor(Ans));
-        Ans=divider(Ans,cFact);
-        dispMatrix(Ans);
+        else
+        System.out.println("Invalid Reaction.");
     }
-    
+
     double[][] multiply(double d[][], double a)
     {
         for(int i=0;i<d.length;i++)
@@ -61,19 +73,11 @@ class shodorFrontEnd extends shodorMatrix
         }
         return d;
     }
-    
+
     Matrix wholeNo(Matrix a)
     {
         double d[][]=a.getArray();
-        double min=d[0][0];
-        for(int i=0;i<d.length;i++)
-        {
-            for(int j=0;j<d[0].length;j++)
-            {
-                if(d[i][j]<min)
-                min=d[i][j];
-            }
-        }
+        double min=minValue(a);
         while(min<1)
         {
             min*=10;
@@ -82,7 +86,7 @@ class shodorFrontEnd extends shodorMatrix
         Matrix D=new Matrix(d);
         return D;
     }
-    
+
     public int[][] commonFactor(Matrix ans)
     {
         double[][] a=ans.getArray();
@@ -90,7 +94,7 @@ class shodorFrontEnd extends shodorMatrix
         for(int i=0;i<a.length;i++)
         {
             if(max<a[i][0])
-            max=(int)a[i][0];
+                max=(int)a[i][0];
         }
         int fact[][]=new int[max][a.length];
         for(int i=0;i<fact.length;i++)
@@ -112,7 +116,7 @@ class shodorFrontEnd extends shodorMatrix
         }
         return fact;
     }
-    
+
     int HCF(int[][] arr)
     {
         int max=1;
@@ -161,7 +165,7 @@ class shodorFrontEnd extends shodorMatrix
         return matFinal;
     }
 
-    Matrix divider(Matrix a,int b)
+    Matrix divider(Matrix a,double b)
     {
         double A[][]=a.getArray();
         for(int i=0;i<A.length;i++)
@@ -340,5 +344,53 @@ class shodorFrontEnd extends shodorMatrix
         double last=lastValue(a,b,ans,diff);
         ans=addToMatrix(ans,last);
         return ans;
+    }
+
+    boolean isNotInteger(Matrix mat)
+    {
+        double[][] arr=mat.getArray();
+        boolean flag=false;
+        for(int i=0;i<arr.length;i++)
+        {
+            for(int j=0;j<arr[0].length;j++)
+            {
+                if(arr[i][j]%1!=0)
+                {
+                    flag=true;
+                    break;
+                }
+            }
+            if(flag)
+                break;
+        }
+        return flag;
+    }
+
+    double minValue(Matrix mat)
+    {
+        double d[][]=mat.getArray();
+        double min=d[0][0];
+        for(int i=0;i<d.length;i++)
+        {
+            for(int j=0;j<d[0].length;j++)
+            {
+                if(d[i][j]<min)
+                    min=d[i][j];
+            }
+        }
+        return min;
+    }
+    
+    int[][] twoDToThreeD(int[][][] m)
+    {
+        int a[][]=new int[m.length][m[0].length];
+        for(int i=0;i<m.length;i++)
+        {
+            for(int j=0;j<m[0].length;j++)
+            {
+                a[i][j]=m[i][j][0];
+            }
+        }
+        return a;
     }
 }
