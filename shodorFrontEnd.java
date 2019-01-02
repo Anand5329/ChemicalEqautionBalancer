@@ -8,6 +8,7 @@ class shodorFrontEnd extends shodorMatrix
         Scanner sc=new Scanner(System.in);
         shodorFrontEnd obj=new shodorFrontEnd();
         boolean flag=false;
+        obj.instructions();
         do
         {
             obj.control();
@@ -20,6 +21,12 @@ class shodorFrontEnd extends shodorMatrix
                 System.exit(1000);
         }
         while(flag);
+    }
+    
+    public void instructions()
+    {
+        System.out.println("Instructions: ");
+        System.out.println("Ensure that the symbols used for denoting elements start with a capital letter. \nPlease do not use spaces.\nSeparate different compounds on one side with '+'. \nSeparate products and reactants with '='. \nIf 'Invalid Reaction.' is printed, there is a shortage of one or more elements \non one side.");
     }
 
     public void control()
